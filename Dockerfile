@@ -1,7 +1,8 @@
 FROM node:14
+
 # Create app directory
 WORKDIR /usr/src/app
-# Install app dependencies 
+# Install app dependencies using package.json 
 COPY package*.json ./
 RUN npm install
 # Bundle app source
