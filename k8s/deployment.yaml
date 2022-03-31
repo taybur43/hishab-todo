@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-deployment
+  labels:
+    app: node-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app 
+    spec:
+      containers:
+      - name: node-app
+        image: taub/nodejs-app:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 3030
+            protocol: TCP
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+      - name: nginx-web-server
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: nginx-conf
+            mountPath: "/etc/nginx/conf.d"
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf-cm
+        
