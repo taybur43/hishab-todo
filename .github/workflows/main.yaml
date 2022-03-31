@@ -41,6 +41,6 @@ jobs:
         id: get_version
         run: echo "::set-output name=version::$(node -pe "require('./package.json')['version']")"   
       - name: Build the Docker image # push The image to the docker hub
-        run: docker build --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }} --file Dockerfile .   
+        run: docker build --tag $DOCKER_USER/nodejs-demo:${{ steps.date.outputs.date }} --file Dockerfile .   
       - name: Docker Push
         run: docker push $DOCKER_USER/nodejs-demo:${{ steps.get_version.outputs.version }}
